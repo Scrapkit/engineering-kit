@@ -1,0 +1,15 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths:
+      - "**/*.php"
+      - "composer.json"
+      - "phpunit.xml.dist"
+      - ".github/workflows/tests.yml"
+
+jobs:
+  pest:
+    uses: Scrapkit/ci-pipeline/.github/workflows/pest.yml@main

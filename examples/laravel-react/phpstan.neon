@@ -1,0 +1,16 @@
+# Consumer project phpstan.neon (created by `php artisan engineering-kit:install`).
+#
+# The shared include sets the level and common parameters; local `parameters`
+# below override it. Larastan is wired automatically via
+# phpstan/extension-installer.
+includes:
+    - vendor/scrapkit/engineering-kit/configs/php/phpstan.neon
+
+parameters:
+    paths:
+        - app/
+        - config/
+        - database/
+        - routes/
+    # Project overrides win over the shared baseline, e.g.:
+    # level: 8

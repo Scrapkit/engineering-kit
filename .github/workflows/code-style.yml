@@ -1,0 +1,14 @@
+name: Code Style
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths:
+      - "**/*.php"
+      - "pint.json"
+      - ".github/workflows/code-style.yml"
+
+jobs:
+  pint:
+    uses: Scrapkit/ci-pipeline/.github/workflows/pint-check.yml@main

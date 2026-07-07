@@ -1,0 +1,58 @@
+{
+    "name": "@scrapkit/engineering-kit",
+    "version": "1.0.0",
+    "description": "Scrapkit Engineering Standards Kit: shared ESLint, Prettier, TypeScript and Vitest base configs",
+    "type": "module",
+    "license": "MIT",
+    "author": "Vincenzo Scozzari <vincenzo.scoz9@gmail.com>",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/scrapkit/engineering-kit.git"
+    },
+    "keywords": [
+        "scrapkit",
+        "eslint-config",
+        "prettier-config",
+        "tsconfig",
+        "coding-standards"
+    ],
+    "files": [
+        "configs/javascript",
+        "configs/testing/vitest.config.ts"
+    ],
+    "exports": {
+        "./eslint": "./configs/javascript/eslint.config.js",
+        "./prettier": "./configs/javascript/prettier.config.js",
+        "./tsconfig.base.json": "./configs/javascript/tsconfig.base.json",
+        "./vitest": "./configs/testing/vitest.config.ts"
+    },
+    "engines": {
+        "node": ">=20"
+    },
+    "dependencies": {
+        "@eslint/js": "^9.19.0",
+        "@stylistic/eslint-plugin": "^5.10.0",
+        "eslint-config-prettier": "^10.0.1",
+        "eslint-import-resolver-typescript": "^4.4.4",
+        "eslint-plugin-import": "^2.32.0",
+        "eslint-plugin-react": "^7.37.3",
+        "eslint-plugin-react-hooks": "^7.0.0",
+        "globals": "^15.14.0",
+        "prettier-plugin-tailwindcss": "^0.6.11",
+        "typescript-eslint": "^8.23.0"
+    },
+    "peerDependencies": {
+        "eslint": "^9.0.0",
+        "prettier": "^3.0.0",
+        "typescript": ">=5.0.0",
+        "vitest": ">=2.0.0"
+    },
+    "peerDependenciesMeta": {
+        "typescript": {
+            "optional": true
+        },
+        "vitest": {
+            "optional": true
+        }
+    }
+}

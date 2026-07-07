@@ -1,0 +1,21 @@
+# Scrapkit shared PHPStan baseline.
+#
+# Consume from a project's phpstan.neon:
+#
+#     includes:
+#         - vendor/scrapkit/engineering-kit/configs/php/phpstan.neon
+#
+#     parameters:
+#         paths:
+#             - app/
+#             - config/
+#             - database/
+#             - routes/
+#
+# `paths` stay per-project. Local `parameters` override the values below.
+# Larastan and the phpstan-* extensions are wired automatically through
+# phpstan/extension-installer — no manual includes needed.
+parameters:
+    level: 7
+    reportUnmatchedIgnoredErrors: true
+    treatPhpDocTypesAsCertain: false

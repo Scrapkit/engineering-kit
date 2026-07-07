@@ -1,0 +1,9 @@
+includes:
+    - vendor/scrapkit/engineering-kit/configs/php/phpstan.neon
+
+parameters:
+    paths:
+        - app/
+        - config/
+        - database/
+        - routes/

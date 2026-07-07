@@ -1,0 +1,28 @@
+# Validates the shipped JavaScript configs: syntax check and npm payload.
+name: JS Configs
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths:
+      - "configs/javascript/**"
+      - "configs/testing/vitest.config.ts"
+      - "package.json"
+      - ".github/workflows/js-configs.yml"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Syntax-check shipped configs
+        run: |
+          node --check configs/javascript/eslint.config.js
+          node --check configs/javascript/prettier.config.js
+          node -e "JSON.parse(require('fs').readFileSync('configs/javascript/tsconfig.base.json'))"
+      - name: Verify npm payload
+        run: npm pack --dry-run

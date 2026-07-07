@@ -1,0 +1,33 @@
+# Publishes @scrapkit/engineering-kit to npm when a version tag is pushed.
+# The Composer side needs no workflow: Packagist picks the tag up from GitHub.
+# Requires the NPM_TOKEN repository secret.
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  npm-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: "https://registry.npmjs.org"
+      - name: Verify tag matches package.json version
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          VERSION="$(node -p "require('./package.json').version")"
+          if [ "$TAG" != "$VERSION" ]; then
+            echo "Tag v$TAG does not match package.json version $VERSION" >&2
+            exit 1
+          fi
+      - run: npm publish --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

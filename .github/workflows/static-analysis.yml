@@ -1,0 +1,15 @@
+name: Static Analysis
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths:
+      - "**/*.php"
+      - "composer.json"
+      - "phpstan.neon.dist"
+      - ".github/workflows/static-analysis.yml"
+
+jobs:
+  phpstan:
+    uses: Scrapkit/ci-pipeline/.github/workflows/phpstan.yml@main

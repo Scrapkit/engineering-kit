@@ -1,0 +1,34 @@
+# Consumer project CI: one caller workflow wiring every reusable workflow
+# from Scrapkit/ci-pipeline. The pipeline fails when formatting, static
+# analysis, or tests fail. The project keeps only its own configs (extended
+# from @scrapkit/engineering-kit); the workflows just run them.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  pint:
+    uses: Scrapkit/ci-pipeline/.github/workflows/pint-check.yml@main
+
+  phpstan:
+    uses: Scrapkit/ci-pipeline/.github/workflows/phpstan.yml@main
+
+  pest:
+    uses: Scrapkit/ci-pipeline/.github/workflows/pest.yml@main
+
+  eslint:
+    uses: Scrapkit/ci-pipeline/.github/workflows/js-eslint.yml@main
+    with:
+      max-warnings: "0"
+
+  prettier:
+    uses: Scrapkit/ci-pipeline/.github/workflows/prettier-check.yml@main
+
+  vitest:
+    uses: Scrapkit/ci-pipeline/.github/workflows/vitest.yml@main
+
+  playwright:
+    uses: Scrapkit/ci-pipeline/.github/workflows/playwright.yml@main
