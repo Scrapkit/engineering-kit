@@ -1,6 +1,8 @@
 # Publishes @scrapkit/engineering-kit to npm when a version tag is pushed.
 # The Composer side needs no workflow: Packagist picks the tag up from GitHub.
-# Requires the NPM_TOKEN repository secret.
+# Auth uses npm trusted publishing (OIDC): the package on npmjs.com must have
+# a trusted publisher configured for Scrapkit/engineering-kit + release.yml.
+# No npm token secret is needed.
 name: Release
 
 on:
@@ -20,6 +22,8 @@ jobs:
         with:
           node-version: 22
           registry-url: "https://registry.npmjs.org"
+      # Trusted publishing needs npm >= 11.5.1; Node 22 bundles npm 10.
+      - run: npm install -g npm@latest
       - name: Verify tag matches package.json version
         run: |
           TAG="${GITHUB_REF_NAME#v}"
@@ -29,5 +33,3 @@ jobs:
             exit 1
           fi
       - run: npm publish --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
