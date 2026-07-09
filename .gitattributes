@@ -1,8 +1,9 @@
 # Path-based git attributes
 # https://www.kernel.org/pub/software/scm/git/docs/gitattributes.html
 
-# Keep docs/, configs/, templates/, claude/ and examples/ in the Composer dist:
-# they ARE the product this package ships.
+# Keep docs/, configs/, templates/, claude/, plugins/ and examples/ in the
+# Composer dist: they ARE the product this package ships. plugins/ holds the
+# prompt sources that engineering-kit:install copies into .claude/commands/.
 /.github            export-ignore
 /.gitattributes     export-ignore
 /.gitignore         export-ignore

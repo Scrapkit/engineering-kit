@@ -1,0 +1,15 @@
+{
+  "name": "scrapkit",
+  "description": "Scrapkit engineering standards for Claude Code: the prompts that keep AI-assisted development aligned across projects",
+  "owner": {
+    "name": "Vincenzo Scozzari",
+    "email": "vincenzo.scoz9@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "engineering-kit",
+      "source": "./plugins/engineering-kit",
+      "description": "Scrapkit engineering standards as Claude Code skills: quality audit, code review, refactoring and feature development"
+    }
+  ]
+}
