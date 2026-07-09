@@ -47,3 +47,8 @@ Same PR process as any change, plus:
   project-specific instructions *below* it.
 - Improvements to the org-wide rules go through a PR to this package, so all
   teams get them on their next `composer update`.
+- Four reusable prompts ship with the kit — `code-review`,
+  `feature-development`, `refactoring`, `quality-audit` — as slash commands in
+  Laravel projects and as a Claude Code plugin everywhere else. Installation
+  and the choice between the two routes are covered in the
+  [README](../README.md#the-prompts-as-a-claude-code-plugin).

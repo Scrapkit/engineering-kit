@@ -144,6 +144,8 @@ composer update scrapkit/engineering-kit
 npm update @scrapkit/engineering-kit
 php artisan engineering-kit:update        # sync managed files, keeps local edits
 php artisan engineering-kit:update --force # overwrite locally modified managed files
+
+claude plugin marketplace update scrapkit # prompts installed as the Claude Code plugin
 ```
 
 The version each project uses is tracked by its `composer.lock` /
@@ -159,7 +161,12 @@ Semantic Versioning; one git tag `vX.Y.Z` releases both packages
 - **MINOR** — new non-breaking rules, new docs/prompts/templates, new configs.
 - **PATCH** — fixes to docs or configs with no behavioral tightening.
 
-Release checklist: update `CHANGELOG.md`, bump `package.json` version, tag.
+Release checklist: update `CHANGELOG.md`; bump the version in **both**
+`package.json` and `plugins/engineering-kit/.claude-plugin/plugin.json`; tag.
+The plugin bump is not redundant with the tag: Claude Code delivers a plugin
+update only when that manifest field changes, so a release that skips it never
+reaches anyone who installed the plugin. `release.yml` refuses to publish a
+tag that disagrees with either file.
 
 ## Contributing
 
