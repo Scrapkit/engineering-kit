@@ -39,12 +39,19 @@ jobs:
             exit 1
           fi
           echo "npm $HAVE"
-      - name: Verify tag matches package.json version
+      # Both manifests, not just npm's: Claude Code delivers a plugin update
+      # only when the plugin manifest's version changes, so a tag that skips
+      # that bump silently strands everyone who installed the plugin.
+      - name: Verify tag matches manifest versions
         run: |
           TAG="${GITHUB_REF_NAME#v}"
-          VERSION="$(node -p "require('./package.json').version")"
-          if [ "$TAG" != "$VERSION" ]; then
-            echo "Tag v$TAG does not match package.json version $VERSION" >&2
-            exit 1
-          fi
+          FAIL=0
+          for MANIFEST in package.json plugins/engineering-kit/.claude-plugin/plugin.json; do
+            VERSION="$(node -p "require('./$MANIFEST').version")"
+            if [ "$TAG" != "$VERSION" ]; then
+              echo "Tag v$TAG does not match $MANIFEST version $VERSION" >&2
+              FAIL=1
+            fi
+          done
+          exit $FAIL
       - run: npm publish --access public --provenance

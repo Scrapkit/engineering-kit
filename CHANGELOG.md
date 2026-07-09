@@ -4,6 +4,20 @@ All notable changes to `scrapkit/engineering-kit` / `@scrapkit/engineering-kit`
 are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- The release checklist in the README now includes the plugin manifest
+  (`plugins/engineering-kit/.claude-plugin/plugin.json`), and `release.yml`
+  enforces it: a tag whose version disagrees with either manifest is refused
+  before publish. Claude Code delivers plugin updates only on a manifest
+  version change, so a release that skipped the bump would never reach plugin
+  installs. (#5)
+- The README's Updating section covers the plugin route
+  (`claude plugin marketplace update scrapkit`), and `docs/ai-guidelines.md`
+  points to the prompts and the plugin.
+
 ## v1.1.1 - 2026-07-09
 
 ### Fixed
