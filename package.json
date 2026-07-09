@@ -1,6 +1,6 @@
 {
     "name": "@scrapkit/engineering-kit",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Scrapkit Engineering Standards Kit: shared ESLint, Prettier, TypeScript and Vitest base configs",
     "type": "module",
     "license": "MIT",
