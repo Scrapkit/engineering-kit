@@ -31,12 +31,26 @@ src/           the artisan install/update commands
 
 ## Installation (Laravel + React + TypeScript project)
 
+The Composer package is not on Packagist ([#4](https://github.com/Scrapkit/engineering-kit/issues/4)),
+so each project tells Composer to read it straight from GitHub first:
+
+```bash
+composer config repositories.engineering-kit vcs https://github.com/Scrapkit/engineering-kit
+```
+
+Then install both sides:
+
 ```bash
 composer require scrapkit/engineering-kit --dev
 php artisan engineering-kit:install
 
 npm install --save-dev @scrapkit/engineering-kit
 ```
+
+Composer resolves versions from this repository's tags. In CI, configure a
+GitHub token (`composer config github-oauth.github.com <token>`) to stay clear
+of API rate limits. If the package lands on Packagist later, the `repositories`
+entry becomes unnecessary but keeps working — nothing to migrate.
 
 `engineering-kit:install` creates (never overwrites) the PHP-side files:
 

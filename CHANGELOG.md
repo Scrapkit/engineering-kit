@@ -17,6 +17,9 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 - The README's Updating section covers the plugin route
   (`claude plugin marketplace update scrapkit`), and `docs/ai-guidelines.md`
   points to the prompts and the plugin.
+- Installation now documents the VCS `repositories` entry: the Composer package
+  is consumed straight from GitHub, since it is not on Packagist (#4 — deferred
+  by choice, the repo being public makes the VCS route work for everyone).
 
 ## v1.1.1 - 2026-07-09
 
