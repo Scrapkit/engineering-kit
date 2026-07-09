@@ -4,6 +4,19 @@ All notable changes to `scrapkit/engineering-kit` / `@scrapkit/engineering-kit`
 are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.1.1 - 2026-07-09
+
+### Fixed
+
+- `npm publish` in the release workflow. It had never succeeded: the step that
+  upgraded npm to satisfy trusted publishing (`npm install -g npm@latest`) made
+  npm prune its own dependencies mid-upgrade, and `--provenance` then died on a
+  missing `sigstore`. Node 24 bundles npm 11.16.0, past the 11.5.1 trusted
+  publishing needs, so the upgrade is gone and the runtime supplies it. See #4.
+
+No change to the guidelines, configs, prompts or plugin. `v1.1.0` carries the
+same content but was never published to npm, because its tag predates this fix.
+
 ## v1.1.0 - 2026-07-09
 
 ### Added
