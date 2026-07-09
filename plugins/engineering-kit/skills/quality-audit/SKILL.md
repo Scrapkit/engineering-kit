@@ -1,5 +1,6 @@
 ---
 description: Full-repository quality audit, written to docs/audits/ and comparable across runs
+disable-model-invocation: true
 ---
 
 Produce a full quality audit of this repository: a snapshot of code health at a
@@ -162,7 +163,11 @@ justifies it.
 6. **Technical debt** — TODOs, dead code, outdated dependencies
 7. **Standards compliance** — against `vendor/scrapkit/engineering-kit/docs/`
    (`coding-guidelines.md`, `architecture-guidelines.md`, `security-guidelines.md`),
-   or against `docs/` when auditing engineering-kit itself
+   or against `docs/` when auditing engineering-kit itself. When neither exists
+   the standards are unreachable — the audit reached this repository without the
+   package. Write `n/a` in the Standards Compliance section, say so in the
+   Executive Summary, and stop there: an invented standard would produce
+   findings that no document in the repository supports.
 
 For every finding give: file and line; Category (Bug / Security / Performance /
 Maintainability / Style / Best Practice / Opinion); Classification; Impact

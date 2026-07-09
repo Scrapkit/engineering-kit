@@ -78,10 +78,26 @@ everyone who clones it gets the prompts with no setup:
 
 Refresh with `/plugin marketplace update` after a new release.
 
+### Which route to use
+
 The plugin and `engineering-kit:install` read the same files, under
-`plugins/engineering-kit/skills/`. A Laravel project that does both will see
-each prompt twice — once as `/quality-audit`, once as
-`/engineering-kit:quality-audit`. Pick one route per project.
+`plugins/engineering-kit/skills/`, so the prompts are identical either way. The
+routes are not interchangeable, though:
+
+- **A Laravel project that requires the package** should use
+  `engineering-kit:install`. The prompts arrive with the guidelines they cite —
+  `quality-audit` audits a project against
+  `vendor/scrapkit/engineering-kit/docs/` — so a single Composer version pins
+  both, and they move together on `composer update`.
+- **Every other repository** should use the plugin. It is the only route that
+  reaches a repository Composer does not.
+
+Enabling both in one project is supported but discouraged: every prompt shows up
+twice, once as `/quality-audit` and once as `/engineering-kit:quality-audit`,
+and the plugin's git ref and the package's Composer version pin the prompt and
+the guidelines independently — an audit can then be scored against guidelines
+from a different release. Under the plugin alone, with no package installed,
+`quality-audit` reports Standards Compliance as `n/a` rather than inventing one.
 
 The JavaScript side is consumed **by extension** — nothing is copied. Wire it
 up with three small files (full versions in [`examples/laravel-react/`](examples/laravel-react/)):

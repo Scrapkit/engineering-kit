@@ -26,6 +26,16 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
   `engineering-kit:install` read them from there, so there is a single copy to
   maintain. The files `engineering-kit:install` writes into a project are
   unchanged: still `.claude/commands/{code-review,feature-development,refactoring,quality-audit}.md`.
+- `quality-audit` no longer runs unless you invoke it. Claude Code treats
+  `.claude/commands/*.md` and a plugin's `SKILL.md` as the same thing, so until
+  now Claude could start an audit on its own — one that adds a git worktree and
+  writes a report — along either route. `disable-model-invocation: true` in the
+  prompt closes both. The other three prompts stay model-invocable: they only
+  advise.
+- `quality-audit` reports Standards Compliance as `n/a` when neither
+  `vendor/scrapkit/engineering-kit/docs/` nor `docs/` is present, instead of
+  scoring the repository against guidelines it cannot read. This is the case in
+  a repository reached by the plugin but not by Composer.
 
 ## v1.0.0 - 2026-07-08
 
