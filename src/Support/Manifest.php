@@ -20,6 +20,9 @@ final class Manifest
      * Files managed by engineering-kit:install / engineering-kit:update,
      * as [target relative to the app's base path => absolute source path].
      *
+     * The prompts are sourced from plugins/engineering-kit/skills/: the same
+     * files back the Claude Code plugin, so there is one copy to maintain.
+     *
      * @return array<string, string>
      */
     public static function copies(): array
@@ -29,9 +32,10 @@ final class Manifest
             'phpstan.neon' => self::packagePath('stubs/phpstan.neon.stub'),
             '.github/PULL_REQUEST_TEMPLATE.md' => self::packagePath('templates/pull-request-template.md'),
             '.github/ISSUE_TEMPLATE/default.md' => self::packagePath('templates/issue-template.md'),
-            '.claude/commands/code-review.md' => self::packagePath('claude/prompts/code-review.md'),
-            '.claude/commands/feature-development.md' => self::packagePath('claude/prompts/feature-development.md'),
-            '.claude/commands/refactoring.md' => self::packagePath('claude/prompts/refactoring.md'),
+            '.claude/commands/code-review.md' => self::packagePath('plugins/engineering-kit/skills/code-review/SKILL.md'),
+            '.claude/commands/feature-development.md' => self::packagePath('plugins/engineering-kit/skills/feature-development/SKILL.md'),
+            '.claude/commands/refactoring.md' => self::packagePath('plugins/engineering-kit/skills/refactoring/SKILL.md'),
+            '.claude/commands/quality-audit.md' => self::packagePath('plugins/engineering-kit/skills/quality-audit/SKILL.md'),
         ];
     }
 }

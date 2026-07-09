@@ -1,0 +1,113 @@
+# Monthly quality audit — opt-in.
+#
+# Copy to .github/workflows/quality-audit.yml in the consuming project and set
+# the ANTHROPIC_API_KEY secret. Not installed by engineering-kit:install: a
+# scheduled audit spends API tokens, so each project enables it deliberately.
+#
+# GitHub disables scheduled workflows after 60 days without repository activity.
+# The workflow_dispatch trigger below re-enables this one.
+
+name: Quality Audit
+
+on:
+  schedule:
+    - cron: "0 6 1 * *" # 06:00 UTC, first day of each month
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # the baseline commit must be reachable
+
+      # The "has anything changed" gate is deterministic, so it runs here rather
+      # than inside the model. When nothing changed we write the stub ourselves
+      # and never spend a token.
+      - name: Compare against the previous audit
+        id: gate
+        run: |
+          set -euo pipefail
+          today="$(date +%F)"
+          head_sha="$(git rev-parse HEAD)"
+          previous="$(ls docs/audits/quality-audit-*.md 2>/dev/null | sort | tail -1 || true)"
+
+          echo "today=$today"       >> "$GITHUB_OUTPUT"
+          echo "head_sha=$head_sha" >> "$GITHUB_OUTPUT"
+
+          if [ -z "$previous" ]; then
+            echo "No previous audit; running a full one."
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          baseline="$(sed -n 's/^commit: //p' "$previous" | head -1)"
+          if [ -z "$baseline" ] || ! git cat-file -e "$baseline^{commit}" 2>/dev/null; then
+            echo "Baseline missing or unreachable; running a full audit."
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "baseline=$baseline"  >> "$GITHUB_OUTPUT"
+          echo "previous=$previous"  >> "$GITHUB_OUTPUT"
+
+          # docs/audits is excluded: the previous audit's own commit would
+          # otherwise always look like a change.
+          if git diff --quiet "$baseline" HEAD -- . \
+              ':(exclude)docs/audits' ':(exclude)vendor' ':(exclude)node_modules' \
+              ':(exclude)storage' ':(exclude)bootstrap/cache' ':(exclude)public/build' \
+              ':(exclude)dist' ':(exclude)coverage'; then
+            echo "No code changed since $baseline; skipping the audit."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Write the unchanged stub
+        if: steps.gate.outputs.changed == 'false'
+        env:
+          TODAY: ${{ steps.gate.outputs.today }}
+          HEAD_SHA: ${{ steps.gate.outputs.head_sha }}
+          BASELINE: ${{ steps.gate.outputs.baseline }}
+          PREVIOUS: ${{ steps.gate.outputs.previous }}
+        run: |
+          set -euo pipefail
+          mkdir -p docs/audits
+          cat > "docs/audits/quality-audit-${TODAY}.md" <<EOF
+          ---
+          commit: ${HEAD_SHA}
+          baseline: ${BASELINE}
+          status: unchanged
+          ---
+
+          # Quality Audit — ${GITHUB_REPOSITORY##*/}
+          Date: ${TODAY}
+
+          No code changed between \`${BASELINE}\` and \`${HEAD_SHA}\` outside the
+          excluded paths. The findings and scores of
+          [$(basename "$PREVIOUS")](./$(basename "$PREVIOUS")) remain valid.
+          EOF
+
+      - name: Run the audit
+        if: steps.gate.outputs.changed == 'true'
+        uses: anthropics/claude-code-action@v1
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        with:
+          prompt: /quality-audit
+
+      - name: Open the pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: quality-audit/${{ steps.gate.outputs.today }}
+          title: "Quality audit — ${{ steps.gate.outputs.today }}"
+          body: |
+            Automated monthly quality audit of `${{ steps.gate.outputs.head_sha }}`.
+            ${{ steps.gate.outputs.changed == 'false' && 'No code changed since the previous audit.' || '' }}
+          commit-message: "docs: quality audit ${{ steps.gate.outputs.today }}"
+          add-paths: docs/audits

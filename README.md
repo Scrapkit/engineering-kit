@@ -23,7 +23,8 @@ and are referenced from consumer projects (see
 docs/          coding, architecture, AI, pull-request, security guidelines
 configs/       php/ (phpstan.neon, pint.json)  javascript/ (eslint, prettier, tsconfig)  testing/ (pest, vitest)
 templates/     PR template, issue template, commit convention
-claude/        org-wide CLAUDE.md + reusable prompts (code review, feature dev, refactoring)
+claude/        org-wide CLAUDE.md, imported into each project's CLAUDE.md
+plugins/       the Claude Code plugin: reusable prompts (code review, feature dev, refactoring, quality audit)
 examples/      a fully wired Laravel + React + TypeScript consumer project
 src/           the artisan install/update commands
 ```
@@ -44,7 +45,59 @@ npm install --save-dev @scrapkit/engineering-kit
 - `CLAUDE.md` — with the `@vendor/scrapkit/engineering-kit/claude/CLAUDE.md`
   import line (org rules follow the installed version automatically)
 - `.github/PULL_REQUEST_TEMPLATE.md`, `.github/ISSUE_TEMPLATE/default.md`
-- `.claude/commands/{code-review,feature-development,refactoring}.md`
+- `.claude/commands/{code-review,feature-development,refactoring,quality-audit}.md`
+
+## The prompts as a Claude Code plugin
+
+The four prompts also ship as a Claude Code plugin, installed over git rather
+than Composer. Use it to get them in repositories this package is not installed
+in — including repositories that are not PHP at all.
+
+The prompts are namespaced when they come from the plugin:
+`/engineering-kit:quality-audit`, not `/quality-audit`.
+
+**For yourself, across every repository.** Add the marketplace once, install,
+and enable it in your own `~/.claude/settings.json`:
+
+```bash
+/plugin marketplace add scrapkit/engineering-kit
+/plugin install engineering-kit@scrapkit
+```
+
+**For a whole team.** Commit this to the project's `.claude/settings.json`, and
+everyone who clones it gets the prompts with no setup:
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "scrapkit": { "source": { "source": "github", "repo": "scrapkit/engineering-kit" } }
+  },
+  "enabledPlugins": { "engineering-kit@scrapkit": true }
+}
+```
+
+Refresh with `/plugin marketplace update` after a new release.
+
+### Which route to use
+
+The plugin and `engineering-kit:install` read the same files, under
+`plugins/engineering-kit/skills/`, so the prompts are identical either way. The
+routes are not interchangeable, though:
+
+- **A Laravel project that requires the package** should use
+  `engineering-kit:install`. The prompts arrive with the guidelines they cite —
+  `quality-audit` audits a project against
+  `vendor/scrapkit/engineering-kit/docs/` — so a single Composer version pins
+  both, and they move together on `composer update`.
+- **Every other repository** should use the plugin. It is the only route that
+  reaches a repository Composer does not.
+
+Enabling both in one project is supported but discouraged: every prompt shows up
+twice, once as `/quality-audit` and once as `/engineering-kit:quality-audit`,
+and the plugin's git ref and the package's Composer version pin the prompt and
+the guidelines independently — an audit can then be scored against guidelines
+from a different release. Under the plugin alone, with no package installed,
+`quality-audit` reports Standards Compliance as `n/a` rather than inventing one.
 
 The JavaScript side is consumed **by extension** — nothing is copied. Wire it
 up with three small files (full versions in [`examples/laravel-react/`](examples/laravel-react/)):
