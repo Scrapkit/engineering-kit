@@ -1,5 +1,6 @@
 # Publishes @scrapkit/engineering-kit to npm when a version tag is pushed.
-# The Composer side needs no workflow: Packagist picks the tag up from GitHub.
+# The Composer side needs no workflow, but Packagist only picks tags up once the
+# package has been submitted there a first time — see issue #4.
 # Auth uses npm trusted publishing (OIDC): the package on npmjs.com must have
 # a trusted publisher configured for Scrapkit/engineering-kit + release.yml.
 # No npm token secret is needed.
@@ -9,6 +10,9 @@ on:
   push:
     tags:
       - "v*"
+  # Republish a tag whose run failed, without moving the tag. Pick the tag as
+  # the ref when dispatching.
+  workflow_dispatch:
 
 jobs:
   npm-publish:
@@ -20,10 +24,21 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          # Trusted publishing needs npm >= 11.5.1. Node 24 bundles npm 11, so
+          # take it from the runtime: `npm install -g npm@latest` prunes the
+          # running npm's own dependencies mid-upgrade, and publishing then
+          # dies on a missing `sigstore`.
+          node-version: 24
           registry-url: "https://registry.npmjs.org"
-      # Trusted publishing needs npm >= 11.5.1; Node 22 bundles npm 10.
-      - run: npm install -g npm@latest
+      - name: Verify npm is new enough for trusted publishing
+        run: |
+          HAVE="$(npm --version)"
+          WANT=11.5.1
+          if [ "$(printf '%s\n%s\n' "$WANT" "$HAVE" | sort -V | head -1)" != "$WANT" ]; then
+            echo "npm $HAVE is older than $WANT; trusted publishing will fail" >&2
+            exit 1
+          fi
+          echo "npm $HAVE"
       - name: Verify tag matches package.json version
         run: |
           TAG="${GITHUB_REF_NAME#v}"
