@@ -21,6 +21,14 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
   is consumed straight from GitHub, since it is not on Packagist (#4 — deferred
   by choice, the repo being public makes the VCS route work for everyone).
 
+### Removed
+
+- `claude/prompts/quality-audit.md` — a stale duplicate of
+  `plugins/engineering-kit/skills/quality-audit/SKILL.md` left behind by the
+  v1.1.0 move of the prompt sources. Nothing referenced it, and it had already
+  diverged from the canonical skill (audit finding TD1). The 2026-07-09 audit
+  report that flagged it is now committed under `docs/audits/`.
+
 ## v1.1.1 - 2026-07-09
 
 ### Fixed
