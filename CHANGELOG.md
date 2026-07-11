@@ -6,6 +6,16 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+
+- `docs/git-guidelines.md` — branching model, branch naming, rebase and
+  force-push rules, tags. Writes down the `type/kebab-description` convention
+  the repository already practiced.
+- `docs/testing-guidelines.md` — what gets a test and how: Pest and Vitest
+  practice on top of the shared `configs/testing/` bases. Now cited by
+  `claude/CLAUDE.md` and by the quality-audit and feature-development
+  prompts, so both humans and Claude read the same testing bar.
+
 ### Changed
 
 - The release checklist in the README now includes the plugin manifest
