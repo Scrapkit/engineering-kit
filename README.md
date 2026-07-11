@@ -199,11 +199,7 @@ composer format    # Pint
 
 ## Documentation
 
-- [Coding guidelines](docs/coding-guidelines.md) — PHP/Laravel and React/TS standards
-- [Architecture guidelines](docs/architecture-guidelines.md) — decision criteria, not just rules
-- [Testing guidelines](docs/testing-guidelines.md) — what to test and how, Pest and Vitest
-- [Git guidelines](docs/git-guidelines.md) — branching, branch naming, rebase rules, tags
-- [AI guidelines](docs/ai-guidelines.md) — how we use AI assistants
-- [Pull request guidelines](docs/pull-request-guidelines.md)
-- [Security guidelines](docs/security-guidelines.md)
-- [Commit convention](templates/commit-convention.md)
+The guidelines live in [`docs/`](docs/README.md); its index gives a one-line
+summary of each document and a suggested reading order. The
+[commit convention](templates/commit-convention.md) sits in `templates/`
+with the other process templates.

@@ -15,6 +15,9 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
   practice on top of the shared `configs/testing/` bases. Now cited by
   `claude/CLAUDE.md` and by the quality-audit and feature-development
   prompts, so both humans and Claude read the same testing bar.
+- `docs/README.md` — index of the guidelines with a one-liner each and a
+  suggested reading order for new engineers. The root README's
+  Documentation section now points at it instead of keeping a second list.
 
 ### Changed
 
