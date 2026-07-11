@@ -6,8 +6,8 @@ Project-specific rules live in the project's own `CLAUDE.md` and take
 precedence over this file.
 
 The full standards live in `vendor/scrapkit/engineering-kit/docs/` — consult
-`coding-guidelines.md` and `architecture-guidelines.md` when a decision is not
-covered here.
+`coding-guidelines.md`, `architecture-guidelines.md`, and
+`testing-guidelines.md` when a decision is not covered here.
 
 ## Before modifying code
 

@@ -201,6 +201,8 @@ composer format    # Pint
 
 - [Coding guidelines](docs/coding-guidelines.md) — PHP/Laravel and React/TS standards
 - [Architecture guidelines](docs/architecture-guidelines.md) — decision criteria, not just rules
+- [Testing guidelines](docs/testing-guidelines.md) — what to test and how, Pest and Vitest
+- [Git guidelines](docs/git-guidelines.md) — branching, branch naming, rebase rules, tags
 - [AI guidelines](docs/ai-guidelines.md) — how we use AI assistants
 - [Pull request guidelines](docs/pull-request-guidelines.md)
 - [Security guidelines](docs/security-guidelines.md)

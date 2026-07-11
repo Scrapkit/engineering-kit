@@ -13,7 +13,8 @@ Process:
    (when to create a service, when not to add a pattern).
 2. **Plan.** List the files to change and the tests that will prove the
    feature works. Confirm the plan if anything is ambiguous.
-3. **Test-first where practical.** Write the failing test (Pest or Vitest),
+3. **Test-first where practical.** Write the failing test (Pest or Vitest)
+   following `vendor/scrapkit/engineering-kit/docs/testing-guidelines.md`,
    then the implementation, then make it pass.
 4. **Stay in scope.** No drive-by refactors, no new dependencies without a
    stated reason.
