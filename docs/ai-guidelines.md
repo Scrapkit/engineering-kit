@@ -50,5 +50,10 @@ Same PR process as any change, plus:
 - Four reusable prompts ship with the kit — `code-review`,
   `feature-development`, `refactoring`, `quality-audit` — as slash commands in
   Laravel projects and as a Claude Code plugin everywhere else. Installation
-  and the choice between the two routes are covered in the
+  and the choice between the routes are covered in the
   [README](../README.md#the-prompts-as-a-claude-code-plugin).
+- Projects using [Laravel Boost](https://laravel.com/docs/boost) also receive
+  the org rules and the four prompts through Boost's package discovery
+  (`resources/boost/` in this package) — same source, same Composer version.
+  On those projects take the prompts from Boost *or* from the Claude Code
+  plugin, not both.

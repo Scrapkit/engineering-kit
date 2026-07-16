@@ -30,6 +30,21 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
   source mapping and a caveat: the content is synthesized from public
   material, not the full books, and team-choice conventions are proposals
   until validated.
+- Laravel Boost integration, via Boost's third-party package conventions:
+  AI guidelines in `resources/boost/guidelines/core.blade.php` (a condensed
+  `claude/CLAUDE.md` plus the key coding/architecture rules, deferring to the
+  full docs) and the four prompts as Agent Skills under
+  `resources/boost/skills/`. Consumers running `php artisan boost:install`
+  (or `boost:update --discover`) get both automatically — nothing to
+  configure. `plugins/engineering-kit/skills/` remains the canonical prompt
+  source; a Pest test keeps the Boost copies byte-identical.
+
+### Changed
+
+- Skill frontmatter gained a `name:` key and the bodies a "When to use this
+  skill" section — required and recommended, respectively, by Boost's Agent
+  Skills format, and harmless on the plugin route (Claude Code ignores the
+  extra frontmatter).
 
 ## v2.0.0 - 2026-07-20
 
