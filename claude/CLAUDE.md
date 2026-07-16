@@ -2,7 +2,10 @@
 
 Org-wide rules for AI-assisted development. These are imported into every
 project's `CLAUDE.md` via `@vendor/scrapkit/engineering-kit/claude/CLAUDE.md`.
-Project-specific rules live in the project's own `CLAUDE.md` and take
+Projects using Laravel Boost may also carry a condensed copy of these rules
+(from `resources/boost/guidelines/core.blade.php`, inlined by
+`boost:install`); the two never conflict — this file is the authoritative
+source. Project-specific rules live in the project's own `CLAUDE.md` and take
 precedence over this file.
 
 The full standards live in `vendor/scrapkit/engineering-kit/docs/` — consult

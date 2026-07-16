@@ -1,9 +1,11 @@
 # Path-based git attributes
 # https://www.kernel.org/pub/software/scm/git/docs/gitattributes.html
 
-# Keep docs/, configs/, templates/, claude/, plugins/ and examples/ in the
-# Composer dist: they ARE the product this package ships. plugins/ holds the
-# prompt sources that engineering-kit:install copies into .claude/commands/.
+# Keep docs/, configs/, templates/, claude/, plugins/, resources/ and
+# examples/ in the Composer dist: they ARE the product this package ships.
+# plugins/ holds the canonical prompt sources served as the Claude Code
+# plugin; resources/boost/ holds the guidelines and skills that Laravel Boost
+# discovers on boost:install.
 /.github            export-ignore
 /.gitattributes     export-ignore
 /.gitignore         export-ignore

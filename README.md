@@ -9,7 +9,7 @@ It ships as two packages from the same repository and version tag:
 
 | Package | Registry | Provides |
 | --- | --- | --- |
-| `scrapkit/engineering-kit` | Packagist (Composer) | Docs, PHP configs (PHPStan, Pint), Claude Code guidelines & plugin enablement, PR/issue templates, `artisan engineering-kit:*` commands |
+| `scrapkit/engineering-kit` | Packagist (Composer) | Docs, PHP configs (PHPStan, Pint), Claude Code guidelines & plugin enablement, Laravel Boost guidelines & skills, PR/issue templates, `artisan engineering-kit:*` commands |
 | `@scrapkit/engineering-kit` | npm | ESLint, Prettier, tsconfig, Vitest base configs (consumed by extension, nothing copied) |
 
 CI is intentionally **not** part of this package: reusable GitHub Actions
@@ -27,6 +27,7 @@ configs/       php/ (phpstan.neon, pint.json)  javascript/ (eslint, prettier, ts
 templates/     PR template, issue template, RFC template, commit convention
 claude/        org-wide CLAUDE.md, imported into each project's CLAUDE.md
 plugins/       the Claude Code plugin: reusable prompts (code review, feature dev, refactoring, quality audit)
+resources/     boost/ — guidelines and skills auto-discovered by Laravel Boost
 examples/      a fully wired Laravel + React + TypeScript consumer project
 src/           the artisan install/update commands
 ```
@@ -109,6 +110,25 @@ Releases before 2.0 also copied the prompts into `.claude/commands/` as
 un-namespaced commands. `engineering-kit:update` removes those copies — with
 `--force` when they were edited locally.
 
+### Which route to use
+
+The plugin and Laravel Boost deliver the same prompt content: the canonical
+files live under `plugins/engineering-kit/skills/`, and the Boost copies under
+`resources/boost/skills/` are kept byte-identical by a test. The routes are not
+interchangeable, though:
+
+- **A Laravel project that uses Laravel Boost** can take the prompts from
+  Boost's discovery (see [Using with Laravel Boost](#using-with-laravel-boost)).
+  They arrive with the guidelines they cite, so a single Composer version pins
+  both and they move together on `composer update`.
+- **Every other repository** should use the plugin. It is the only route that
+  reaches a repository Composer does not — PHP or otherwise.
+
+Enabling both in one project is supported but discouraged: every prompt shows up
+twice, once as a Boost skill and once as `/engineering-kit:quality-audit`, and —
+as above — the two pins move independently, so an audit can be scored against
+guidelines from a different release.
+
 The JavaScript side is consumed **by extension** — nothing is copied. Wire it
 up with three small files (full versions in [`examples/laravel-react/`](examples/laravel-react/)):
 
@@ -128,6 +148,28 @@ export default { ...base, tailwindStylesheet: 'resources/css/app.css' };
 // tsconfig.json
 { "extends": "@scrapkit/engineering-kit/tsconfig.base.json", "include": ["resources/js/**/*"] }
 ```
+
+## Using with Laravel Boost
+
+Projects that use [Laravel Boost](https://laravel.com/docs/boost) need no
+extra configuration. The kit ships Boost's third-party package conventions:
+AI guidelines in `resources/boost/guidelines/core.blade.php` (a condensed
+version of the org rules, deferring to the full docs in
+`vendor/scrapkit/engineering-kit/docs/`) and the four prompts as Agent Skills
+in `resources/boost/skills/`. With both packages installed,
+`php artisan boost:install` — or `boost:update --discover` on an existing
+Boost setup — detects the kit, inlines the guidelines into the generated
+agent files (`CLAUDE.md`, `AGENTS.md`, …), and offers the skills.
+
+Boost's copy may coexist with the `@vendor/scrapkit/engineering-kit/claude/CLAUDE.md`
+import added by `engineering-kit:install`: both derive from the same Composer
+version of this package, so the content never conflicts — the rules are merely
+stated twice. For the prompts, pick one route
+(see [Which route to use](#which-route-to-use)).
+
+No consumer-side wiring is needed — the [example project](examples/laravel-react/)
+demonstrates none because there is none: the whole flow is
+`composer require laravel/boost --dev` followed by `php artisan boost:install`.
 
 ## Overriding the standards
 
@@ -156,6 +198,8 @@ php artisan engineering-kit:update        # sync managed files, keeps local edit
 php artisan engineering-kit:update --force # overwrite locally modified managed files
 
 claude plugin marketplace update scrapkit # prompts installed as the Claude Code plugin
+
+php artisan boost:update                  # guidelines/skills delivered through Laravel Boost
 ```
 
 The version each project uses is tracked by its `composer.lock` /
