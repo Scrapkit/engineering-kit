@@ -21,6 +21,15 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
   day review window. `docs/pull-request-guidelines.md` and the
   `feature-development` prompt point at the threshold so it surfaces where the
   work actually starts.
+- Twelve standards/process documents distilled from the team's reference
+  library (Zandstra ×2, *Head First Design Patterns*, Stauffer, Fowler,
+  *The Pragmatic Programmer*, *Clean Code*, Feathers, Ousterhout, *Laravel
+  Beyond CRUD*, Beck, *Accelerate*), split between `standards/` (how code is
+  written) and `processes/` (how the team works). Written in Italian; each
+  file closes with a review checklist, and each folder README carries the
+  source mapping and a caveat: the content is synthesized from public
+  material, not the full books, and team-choice conventions are proposals
+  until validated.
 
 ## v2.0.0 - 2026-07-20
 
