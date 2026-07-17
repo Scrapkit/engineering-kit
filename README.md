@@ -21,6 +21,8 @@ and are referenced from consumer projects (see
 
 ```
 docs/          coding, architecture, AI, pull-request, security guidelines
+standards/     how code is written — per-book standards from the team's reference library (in Italian)
+processes/     how the team works — TDD, DORA delivery metrics, dev tooling (in Italian)
 configs/       php/ (phpstan.neon, pint.json)  javascript/ (eslint, prettier, tsconfig)  testing/ (pest, vitest)
 templates/     PR template, issue template, RFC template, commit convention
 claude/        org-wide CLAUDE.md, imported into each project's CLAUDE.md
@@ -194,6 +196,9 @@ composer format    # Pint
 ## Documentation
 
 - [Coding guidelines](docs/coding-guidelines.md) — PHP/Laravel and React/TS standards
+- [Standards](standards/README.md) and [Processes](processes/README.md) — per-book
+  standards and processes distilled from the team's reference library (in Italian),
+  each with a source mapping and a review checklist
 - [Architecture guidelines](docs/architecture-guidelines.md) — decision criteria, not just rules
 - [RFC guidelines](docs/rfc-guidelines.md) — when a decision needs an RFC, and how it gets accepted
 - [AI guidelines](docs/ai-guidelines.md) — how we use AI assistants
