@@ -47,6 +47,56 @@ it('prepends the import to an existing CLAUDE.md without touching its content', 
         ->toContain("# My project\n\nLocal rules.\n");
 });
 
+it('enables the engineering-kit plugin in .claude/settings.json', function () {
+    $this->artisan('engineering-kit:install')->assertSuccessful();
+
+    $settings = json_decode(file_get_contents(base_path('.claude/settings.json')), true);
+
+    expect($settings['extraKnownMarketplaces'][Manifest::PLUGIN_MARKETPLACE]['source'])
+        ->toBe(['source' => 'github', 'repo' => 'scrapkit/engineering-kit']);
+    expect($settings['enabledPlugins'][Manifest::PLUGIN_ID])->toBeTrue();
+});
+
+it('merges the plugin settings into an existing .claude/settings.json', function () {
+    (new Filesystem)->ensureDirectoryExists(base_path('.claude'));
+    file_put_contents(base_path('.claude/settings.json'), json_encode([
+        'permissions' => ['allow' => ['Bash(npm run lint)']],
+        'enabledPlugins' => ['other@somewhere' => true],
+    ]));
+
+    $this->artisan('engineering-kit:install')->assertSuccessful();
+
+    $settings = json_decode(file_get_contents(base_path('.claude/settings.json')), true);
+
+    expect($settings['permissions'])->toBe(['allow' => ['Bash(npm run lint)']]);
+    expect($settings['enabledPlugins'])
+        ->toBe(['other@somewhere' => true, Manifest::PLUGIN_ID => true]);
+    expect($settings['extraKnownMarketplaces'])->toHaveKey(Manifest::PLUGIN_MARKETPLACE);
+});
+
+it('respects a deliberately disabled plugin in .claude/settings.json', function () {
+    (new Filesystem)->ensureDirectoryExists(base_path('.claude'));
+    file_put_contents(base_path('.claude/settings.json'), json_encode([
+        'extraKnownMarketplaces' => Manifest::pluginSettings()['extraKnownMarketplaces'],
+        'enabledPlugins' => [Manifest::PLUGIN_ID => false],
+    ]));
+
+    $this->artisan('engineering-kit:install')->assertSuccessful();
+
+    $settings = json_decode(file_get_contents(base_path('.claude/settings.json')), true);
+
+    expect($settings['enabledPlugins'][Manifest::PLUGIN_ID])->toBeFalse();
+});
+
+it('leaves an invalid .claude/settings.json untouched', function () {
+    (new Filesystem)->ensureDirectoryExists(base_path('.claude'));
+    file_put_contents(base_path('.claude/settings.json'), '{not json');
+
+    $this->artisan('engineering-kit:install')->assertSuccessful();
+
+    expect(file_get_contents(base_path('.claude/settings.json')))->toBe('{not json');
+});
+
 it('does not overwrite existing files', function () {
     file_put_contents(base_path('pint.json'), '{"preset": "psr12"}');
 
@@ -58,9 +108,11 @@ it('does not overwrite existing files', function () {
 it('is idempotent', function () {
     $this->artisan('engineering-kit:install')->assertSuccessful();
 
-    $before = file_get_contents(base_path('CLAUDE.md'));
+    $claudeBefore = file_get_contents(base_path('CLAUDE.md'));
+    $settingsBefore = file_get_contents(base_path('.claude/settings.json'));
 
     $this->artisan('engineering-kit:install')->assertSuccessful();
 
-    expect(file_get_contents(base_path('CLAUDE.md')))->toBe($before);
+    expect(file_get_contents(base_path('CLAUDE.md')))->toBe($claudeBefore);
+    expect(file_get_contents(base_path('.claude/settings.json')))->toBe($settingsBefore);
 });

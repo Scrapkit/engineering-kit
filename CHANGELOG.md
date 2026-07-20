@@ -8,6 +8,17 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ### Changed
 
+- **The Claude Code plugin is now the only route for the prompts.**
+  `engineering-kit:install` no longer copies them into `.claude/commands/`;
+  instead it enables the plugin project-wide by merging the scrapkit
+  marketplace and `engineering-kit@scrapkit` into `.claude/settings.json`
+  (non-destructively: only missing keys are added, an explicit opt-out and an
+  unparseable file are left alone). `engineering-kit:update` does the same and
+  removes the legacy `.claude/commands/` copies — automatically when they
+  match the shipped version, with `--force` when they were edited locally.
+  **Migration note:** the prompts become namespaced — `/quality-audit` is now
+  `/engineering-kit:quality-audit`. The org-wide `claude/CLAUDE.md` import is
+  unchanged and stays on the Composer route.
 - The release checklist in the README now includes the plugin manifest
   (`plugins/engineering-kit/.claude-plugin/plugin.json`), and `release.yml`
   enforces it: a tag whose version disagrees with either manifest is refused

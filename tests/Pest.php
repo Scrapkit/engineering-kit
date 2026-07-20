@@ -14,8 +14,9 @@ function cleanupKitFiles(): void
 {
     $files = new Filesystem;
 
-    $targets = array_keys(Manifest::copies());
+    $targets = array_keys(Manifest::copies() + Manifest::legacyCopies());
     $targets[] = 'CLAUDE.md';
+    $targets[] = '.claude/settings.json';
 
     foreach ($targets as $target) {
         $files->delete(base_path($target));
