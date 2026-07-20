@@ -57,7 +57,7 @@ final class Manifest
     }
 
     /**
-     * Prompt copies that releases before 1.2 installed into .claude/commands/.
+     * Prompt copies that releases before 2.0 installed into .claude/commands/.
      * The plugin is now the only route for the prompts, so
      * engineering-kit:update removes these when they match the installed
      * version, and with --force when they were edited locally.

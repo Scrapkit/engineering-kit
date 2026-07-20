@@ -100,7 +100,7 @@ That is fine: `quality-audit` audits a project against
 pins; with no package installed it reports Standards Compliance as `n/a`
 rather than inventing one.
 
-Releases before 1.2 also copied the prompts into `.claude/commands/` as
+Releases before 2.0 also copied the prompts into `.claude/commands/` as
 un-namespaced commands. `engineering-kit:update` removes those copies — with
 `--force` when they were edited locally.
 
