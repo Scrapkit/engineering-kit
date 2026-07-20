@@ -9,7 +9,7 @@ It ships as two packages from the same repository and version tag:
 
 | Package | Registry | Provides |
 | --- | --- | --- |
-| `scrapkit/engineering-kit` | Packagist (Composer) | Docs, PHP configs (PHPStan, Pint), Claude Code guidelines & prompts, PR/issue templates, `artisan engineering-kit:*` commands |
+| `scrapkit/engineering-kit` | Packagist (Composer) | Docs, PHP configs (PHPStan, Pint), Claude Code guidelines & plugin enablement, PR/issue templates, `artisan engineering-kit:*` commands |
 | `@scrapkit/engineering-kit` | npm | ESLint, Prettier, tsconfig, Vitest base configs (consumed by extension, nothing copied) |
 
 CI is intentionally **not** part of this package: reusable GitHub Actions
@@ -58,28 +58,22 @@ entry becomes unnecessary but keeps working — nothing to migrate.
 - `phpstan.neon` — includes the shared baseline, keeps `paths` local
 - `CLAUDE.md` — with the `@vendor/scrapkit/engineering-kit/claude/CLAUDE.md`
   import line (org rules follow the installed version automatically)
+- `.claude/settings.json` — enables the Claude Code plugin from the scrapkit
+  marketplace for everyone who clones the project (merged into an existing
+  file; only missing keys are added, an explicit opt-out is respected)
 - `.github/PULL_REQUEST_TEMPLATE.md`, `.github/ISSUE_TEMPLATE/default.md`
-- `.claude/commands/{code-review,feature-development,refactoring,quality-audit}.md`
 
 ## The prompts as a Claude Code plugin
 
-The four prompts also ship as a Claude Code plugin, installed over git rather
-than Composer. Use it to get them in repositories this package is not installed
-in — including repositories that are not PHP at all.
-
-The prompts are namespaced when they come from the plugin:
+The four prompts ship **only** as a Claude Code plugin, installed over git
+rather than Composer, so one route reaches every repository — PHP or not — and
+no un-namespaced copy can drift. They are namespaced accordingly:
 `/engineering-kit:quality-audit`, not `/quality-audit`.
 
-**For yourself, across every repository.** Add the marketplace once, install,
-and enable it in your own `~/.claude/settings.json`:
-
-```bash
-/plugin marketplace add scrapkit/engineering-kit
-/plugin install engineering-kit@scrapkit
-```
-
-**For a whole team.** Commit this to the project's `.claude/settings.json`, and
-everyone who clones it gets the prompts with no setup:
+**In a project that runs `engineering-kit:install`** there is nothing to do:
+the command writes the plugin enablement into `.claude/settings.json` (see the
+list above), and everyone who clones the project gets the prompts with no
+setup:
 
 ```json
 {
@@ -90,28 +84,25 @@ everyone who clones it gets the prompts with no setup:
 }
 ```
 
+**For yourself, across every other repository.** Add the marketplace once,
+install, and enable it in your own `~/.claude/settings.json`:
+
+```bash
+/plugin marketplace add scrapkit/engineering-kit
+/plugin install engineering-kit@scrapkit
+```
+
 Refresh with `/plugin marketplace update` after a new release.
 
-### Which route to use
+The plugin's git ref and the package's Composer version move independently.
+That is fine: `quality-audit` audits a project against
+`vendor/scrapkit/engineering-kit/docs/` at whatever version `composer.lock`
+pins; with no package installed it reports Standards Compliance as `n/a`
+rather than inventing one.
 
-The plugin and `engineering-kit:install` read the same files, under
-`plugins/engineering-kit/skills/`, so the prompts are identical either way. The
-routes are not interchangeable, though:
-
-- **A Laravel project that requires the package** should use
-  `engineering-kit:install`. The prompts arrive with the guidelines they cite —
-  `quality-audit` audits a project against
-  `vendor/scrapkit/engineering-kit/docs/` — so a single Composer version pins
-  both, and they move together on `composer update`.
-- **Every other repository** should use the plugin. It is the only route that
-  reaches a repository Composer does not.
-
-Enabling both in one project is supported but discouraged: every prompt shows up
-twice, once as `/quality-audit` and once as `/engineering-kit:quality-audit`,
-and the plugin's git ref and the package's Composer version pin the prompt and
-the guidelines independently — an audit can then be scored against guidelines
-from a different release. Under the plugin alone, with no package installed,
-`quality-audit` reports Standards Compliance as `n/a` rather than inventing one.
+Releases before 2.0 also copied the prompts into `.claude/commands/` as
+un-namespaced commands. `engineering-kit:update` removes those copies — with
+`--force` when they were edited locally.
 
 The JavaScript side is consumed **by extension** — nothing is copied. Wire it
 up with three small files (full versions in [`examples/laravel-react/`](examples/laravel-react/)):

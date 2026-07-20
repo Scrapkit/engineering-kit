@@ -44,16 +44,45 @@ class UpdateCommand extends Command
             $this->components->twoColumnDetail($target, '<fg=yellow>differs from package (kept local version)</>');
         }
 
+        foreach (Manifest::legacyCopies() as $target => $source) {
+            if (! $files->exists(base_path($target))) {
+                continue;
+            }
+
+            if ($files->get(base_path($target)) === $files->get($source) || $this->option('force')) {
+                $files->delete(base_path($target));
+                $this->components->twoColumnDetail($target, '<fg=green>removed (now shipped by the plugin)</>');
+
+                continue;
+            }
+
+            $skipped[] = $target;
+            $this->components->twoColumnDetail($target, '<fg=yellow>differs from package (kept local version)</>');
+        }
+
+        $commandsDir = base_path('.claude/commands');
+
+        if ($files->isDirectory($commandsDir) && $files->files($commandsDir) === [] && $files->directories($commandsDir) === []) {
+            $files->deleteDirectory($commandsDir);
+        }
+
         $this->components->twoColumnDetail('CLAUDE.md', match ($this->ensureClaudeImport($files)) {
             'created' => '<fg=green>created with org-wide import</>',
             'updated' => '<fg=green>org-wide import prepended</>',
             default => '<fg=gray>import already present</>',
         });
 
+        $this->components->twoColumnDetail('.claude/settings.json', match ($this->ensurePluginEnabled($files)) {
+            'created' => '<fg=green>created (engineering-kit plugin enabled)</>',
+            'updated' => '<fg=green>engineering-kit plugin enabled</>',
+            'invalid' => '<fg=yellow>skipped (not valid JSON, enable the plugin manually)</>',
+            default => '<fg=gray>plugin already configured</>',
+        });
+
         if ($skipped !== []) {
             $this->newLine();
             $this->components->warn('Some files differ from the package version (local changes were kept).');
-            $this->line('Review them and re-run with --force to overwrite: '.implode(', ', $skipped));
+            $this->line('Review them and re-run with --force to sync: '.implode(', ', $skipped));
         }
 
         return self::SUCCESS;

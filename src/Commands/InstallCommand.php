@@ -34,6 +34,13 @@ class InstallCommand extends Command
             default => '<fg=gray>import already present</>',
         });
 
+        $this->components->twoColumnDetail('.claude/settings.json', match ($this->ensurePluginEnabled($files)) {
+            'created' => '<fg=green>created (engineering-kit plugin enabled)</>',
+            'updated' => '<fg=green>engineering-kit plugin enabled</>',
+            'invalid' => '<fg=yellow>skipped (not valid JSON, enable the plugin manually)</>',
+            default => '<fg=gray>plugin already configured</>',
+        });
+
         $this->newLine();
         $this->components->info('Engineering kit installed.');
         $this->line('Next steps for the JavaScript side:');
