@@ -3,7 +3,7 @@
 use Scrapkit\EngineeringKit\Support\Manifest;
 
 it('ships every source file referenced by the manifest', function () {
-    foreach (Manifest::copies() as $target => $source) {
+    foreach (Manifest::copies() + Manifest::legacyCopies() as $target => $source) {
         expect(file_exists($source))->toBeTrue("missing manifest source for {$target}: {$source}");
     }
 });
