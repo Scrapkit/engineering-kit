@@ -4,6 +4,11 @@
 
 - **Small PRs.** One logical change; aim for a diff a reviewer can hold in
   their head (~400 lines changed is a soft ceiling — split beyond that).
+- **RFC first when the change is big enough.** A new runtime dependency, a
+  hard-to-reverse architectural change, a new package, a breaking standards
+  change: the RFC is accepted before the implementation PR opens, and the PR
+  references it (`Implements RFC 0007`). See
+  [rfc-guidelines.md](rfc-guidelines.md).
 - Follow the [commit convention](../templates/commit-convention.md); the PR
   title follows the same format (`feat(users): …`) because it becomes the
   squash commit.

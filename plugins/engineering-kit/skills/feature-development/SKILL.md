@@ -12,7 +12,11 @@ Process:
    `vendor/scrapkit/engineering-kit/docs/architecture-guidelines.md`
    (when to create a service, when not to add a pattern).
 2. **Plan.** List the files to change and the tests that will prove the
-   feature works. Confirm the plan if anything is ambiguous.
+   feature works. Confirm the plan if anything is ambiguous. When the feature
+   crosses the RFC threshold in
+   `vendor/scrapkit/engineering-kit/docs/rfc-guidelines.md` (new runtime
+   dependency, hard-to-reverse architectural change, new package), the RFC is
+   written and accepted before the implementation starts.
 3. **Test-first where practical.** Write the failing test (Pest or Vitest),
    then the implementation, then make it pass.
 4. **Stay in scope.** No drive-by refactors, no new dependencies without a

@@ -22,7 +22,7 @@ function cleanupKitFiles(): void
         $files->delete(base_path($target));
     }
 
-    foreach (['.claude/commands', '.claude', '.github/ISSUE_TEMPLATE', '.github'] as $dir) {
+    foreach (['.claude/commands', '.claude', '.github/ISSUE_TEMPLATE', '.github', 'docs/rfc', 'docs'] as $dir) {
         $path = base_path($dir);
 
         if ($files->isDirectory($path) && $files->files($path) === [] && $files->directories($path) === []) {

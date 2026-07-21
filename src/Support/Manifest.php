@@ -53,6 +53,7 @@ final class Manifest
             'phpstan.neon' => self::packagePath('stubs/phpstan.neon.stub'),
             '.github/PULL_REQUEST_TEMPLATE.md' => self::packagePath('templates/pull-request-template.md'),
             '.github/ISSUE_TEMPLATE/default.md' => self::packagePath('templates/issue-template.md'),
+            'docs/rfc/0000-template.md' => self::packagePath('templates/rfc-template.md'),
         ];
     }
 
