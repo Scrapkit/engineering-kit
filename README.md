@@ -22,7 +22,7 @@ and are referenced from consumer projects (see
 ```
 docs/          coding, architecture, AI, pull-request, security guidelines
 configs/       php/ (phpstan.neon, pint.json)  javascript/ (eslint, prettier, tsconfig)  testing/ (pest, vitest)
-templates/     PR template, issue template, commit convention
+templates/     PR template, issue template, RFC template, commit convention
 claude/        org-wide CLAUDE.md, imported into each project's CLAUDE.md
 plugins/       the Claude Code plugin: reusable prompts (code review, feature dev, refactoring, quality audit)
 examples/      a fully wired Laravel + React + TypeScript consumer project
@@ -62,6 +62,9 @@ entry becomes unnecessary but keeps working — nothing to migrate.
   marketplace for everyone who clones the project (merged into an existing
   file; only missing keys are added, an explicit opt-out is respected)
 - `.github/PULL_REQUEST_TEMPLATE.md`, `.github/ISSUE_TEMPLATE/default.md`
+- `docs/rfc/0000-template.md` — the RFC template; copy it to
+  `docs/rfc/NNNN-short-title.md` for a decision that needs one
+  ([docs/rfc-guidelines.md](docs/rfc-guidelines.md))
 
 ## The prompts as a Claude Code plugin
 
@@ -192,6 +195,7 @@ composer format    # Pint
 
 - [Coding guidelines](docs/coding-guidelines.md) — PHP/Laravel and React/TS standards
 - [Architecture guidelines](docs/architecture-guidelines.md) — decision criteria, not just rules
+- [RFC guidelines](docs/rfc-guidelines.md) — when a decision needs an RFC, and how it gets accepted
 - [AI guidelines](docs/ai-guidelines.md) — how we use AI assistants
 - [Pull request guidelines](docs/pull-request-guidelines.md)
 - [Security guidelines](docs/security-guidelines.md)

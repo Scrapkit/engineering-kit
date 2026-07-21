@@ -4,6 +4,24 @@ All notable changes to `scrapkit/engineering-kit` / `@scrapkit/engineering-kit`
 are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- **RFC template and process.** `templates/rfc-template.md` is a one-page,
+  ADR-style template (problem, proposal, alternatives considered, consequences,
+  open questions) that `engineering-kit:install` writes to
+  `docs/rfc/0000-template.md` in every consuming project; `update` keeps it in
+  sync and leaves local edits alone, as with every other managed file.
+  `docs/rfc-guidelines.md` is the process: the four triggers that make an RFC
+  mandatory (new runtime dependency or external service, hard-to-reverse
+  architectural change, new `scrapkit/*` package, breaking standards change),
+  the `Draft → Review → Accepted/Rejected/Superseded` lifecycle, four-digit
+  numbering, and acceptance by team consensus after a minimum three working
+  day review window. `docs/pull-request-guidelines.md` and the
+  `feature-development` prompt point at the threshold so it surfaces where the
+  work actually starts.
+
 ## v2.0.0 - 2026-07-20
 
 ### Changed
