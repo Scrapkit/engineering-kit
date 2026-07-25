@@ -4,6 +4,17 @@ All notable changes to `scrapkit/engineering-kit` / `@scrapkit/engineering-kit`
 are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.3.1 - 2026-07-25
+
+### Fixed
+
+- `release.yml` now opens the GitHub Release for the tag it publishes. It only
+  pushed to npm, so `docs/package-guidelines.md` shipped a rule — every tag gets
+  a Release — that this repository was itself keeping by hand, and had already
+  missed once on v2.0.0. The notes are the tag's own `CHANGELOG.md` section, so
+  the two cannot drift, and a tag whose version has no entry now fails the
+  release instead of shipping undocumented.
+
 ## v2.3.0 - 2026-07-25
 
 ### Added
