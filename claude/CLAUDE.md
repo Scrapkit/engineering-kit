@@ -10,7 +10,8 @@ precedence over this file.
 
 The full standards live in `vendor/scrapkit/engineering-kit/docs/` — consult
 `coding-guidelines.md` and `architecture-guidelines.md` when a decision is not
-covered here.
+covered here, and `package-guidelines.md` before versioning or releasing a
+`scrapkit/*` package.
 
 ## Before modifying code
 

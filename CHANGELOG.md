@@ -4,6 +4,28 @@ All notable changes to `scrapkit/engineering-kit` / `@scrapkit/engineering-kit`
 are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.3.0 - 2026-07-25
+
+### Added
+
+- **`docs/package-guidelines.md`** — how a `scrapkit/*` package is versioned and
+  released. `architecture-guidelines.md` already said *whether* to create a
+  package, and its third criterion asks that "someone owns its versioning and
+  changelog"; nothing said what owning it looks like. This is that document:
+  what counts as a breaking change, why `0.x` is a waiting room rather than a
+  destination, tagging and release mechanics (the tag carries its own changelog,
+  and is never left off `main`), Keep a Changelog expectations, deprecating
+  before removing, publish tags and config keys as public API, and `^`
+  constraints in consumers — `@v1` rather than `@main` for the reusable
+  workflows. Each rule cites the release where ignoring it actually cost
+  something.
+
+### Changed
+
+- `architecture-guidelines.md` links to the new document from the criterion that
+  raises it, and `claude/CLAUDE.md` adds it to the docs Claude consults before
+  versioning or releasing a package.
+
 ## v2.2.0 - 2026-07-25
 
 ### Changed

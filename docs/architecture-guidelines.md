@@ -57,7 +57,8 @@ Extract to a `scrapkit/*` package when **all** of these hold:
 1. At least two projects need the same behavior *today* (not hypothetically).
 2. The behavior has a clear boundary (its own config, its own tests, no
    reach into app internals).
-3. Someone owns its versioning and changelog.
+3. Someone owns its versioning and changelog — see
+   [package-guidelines.md](package-guidelines.md).
 
 Otherwise keep it in the app; extraction is easy later, un-extraction is not.
 

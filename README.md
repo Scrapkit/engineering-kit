@@ -20,7 +20,7 @@ and are referenced from consumer projects (see
 ## What's inside
 
 ```
-docs/          coding, architecture, AI, pull-request, security guidelines
+docs/          coding, architecture, package, AI, pull-request, security guidelines
 standards/     how code is written — per-book standards from the team's reference library (in Italian)
 processes/     how the team works — TDD, DORA delivery metrics, dev tooling (in Italian)
 configs/       php/ (phpstan.neon, pint.json)  javascript/ (eslint, prettier, tsconfig)  testing/ (pest, vitest)
