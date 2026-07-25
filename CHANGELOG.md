@@ -4,6 +4,16 @@ All notable changes to `scrapkit/engineering-kit` / `@scrapkit/engineering-kit`
 are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.3.2 - 2026-07-25
+
+### Changed
+
+- `release.yml` now calls `Scrapkit/ci-pipeline/.github/workflows/github-release.yml@v1`
+  instead of carrying its own copy of the note-extraction logic. Two copies of
+  the same thing diverge at the first edit, and the other eight packages needed
+  it too. Behavior is unchanged; the shared workflow additionally accepts the
+  `## [1.2.3]` heading convention the rest of the packages use.
+
 ## v2.3.1 - 2026-07-25
 
 ### Fixed
