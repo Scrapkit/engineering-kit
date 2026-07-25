@@ -11,4 +11,4 @@ on:
 
 jobs:
   pint:
-    uses: Scrapkit/ci-pipeline/.github/workflows/pint-check.yml@main
+    uses: Scrapkit/ci-pipeline/.github/workflows/pint-check.yml@v1

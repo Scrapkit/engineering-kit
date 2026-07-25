@@ -11,24 +11,24 @@ on:
 
 jobs:
   pint:
-    uses: Scrapkit/ci-pipeline/.github/workflows/pint-check.yml@main
+    uses: Scrapkit/ci-pipeline/.github/workflows/pint-check.yml@v1
 
   phpstan:
-    uses: Scrapkit/ci-pipeline/.github/workflows/phpstan.yml@main
+    uses: Scrapkit/ci-pipeline/.github/workflows/phpstan.yml@v1
 
   pest:
-    uses: Scrapkit/ci-pipeline/.github/workflows/pest.yml@main
+    uses: Scrapkit/ci-pipeline/.github/workflows/pest.yml@v1
 
   eslint:
-    uses: Scrapkit/ci-pipeline/.github/workflows/js-eslint.yml@main
+    uses: Scrapkit/ci-pipeline/.github/workflows/js-eslint.yml@v1
     with:
       max-warnings: "0"
 
   prettier:
-    uses: Scrapkit/ci-pipeline/.github/workflows/prettier-check.yml@main
+    uses: Scrapkit/ci-pipeline/.github/workflows/prettier-check.yml@v1
 
   vitest:
-    uses: Scrapkit/ci-pipeline/.github/workflows/vitest.yml@main
+    uses: Scrapkit/ci-pipeline/.github/workflows/vitest.yml@v1
 
   playwright:
-    uses: Scrapkit/ci-pipeline/.github/workflows/playwright.yml@main
+    uses: Scrapkit/ci-pipeline/.github/workflows/playwright.yml@v1

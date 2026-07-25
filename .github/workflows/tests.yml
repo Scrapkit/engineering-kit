@@ -12,4 +12,4 @@ on:
 
 jobs:
   pest:
-    uses: Scrapkit/ci-pipeline/.github/workflows/pest.yml@main
+    uses: Scrapkit/ci-pipeline/.github/workflows/pest.yml@v1

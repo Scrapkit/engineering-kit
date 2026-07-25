@@ -4,6 +4,23 @@ All notable changes to `scrapkit/engineering-kit` / `@scrapkit/engineering-kit`
 are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.2.0 - 2026-07-25
+
+### Changed
+
+- **The reusable CI workflows are now pinned to `@v1`, not `@main`.**
+  `Scrapkit/ci-pipeline` had no tags, so every caller tracked its default
+  branch: a single push to `ci-pipeline` reached every consumer's CI at once,
+  with no way to hold a known-good version. `ci-pipeline` v1.0.0 introduces the
+  `v1` moving major tag, and this release moves the kit's own three workflows
+  and `examples/laravel-react/.github/workflows/ci.yml` onto it.
+
+  **Migration:** in your own workflows, replace `@main` with `@v1` on every
+  `Scrapkit/ci-pipeline/.github/workflows/*.yml` reference. `v1` keeps moving
+  with backward-compatible releases; a breaking change to a workflow's inputs
+  will land on `v2`.
+- `engineering-kit:install` now says to pin `@v1` in its CI step hint.
+
 ## v2.1.0 - 2026-07-25
 
 ### Added

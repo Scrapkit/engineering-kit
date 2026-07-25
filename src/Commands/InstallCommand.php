@@ -49,7 +49,7 @@ class InstallCommand extends Command
         $this->line('     - eslint.config.js   -> import from @scrapkit/engineering-kit/eslint');
         $this->line('     - prettier.config.js -> import from @scrapkit/engineering-kit/prettier');
         $this->line('     - tsconfig.json      -> "extends": "@scrapkit/engineering-kit/tsconfig.base.json"');
-        $this->line('  3. Wire CI using the reusable workflows from Scrapkit/ci-pipeline.');
+        $this->line('  3. Wire CI using the reusable workflows from Scrapkit/ci-pipeline, pinned to @v1.');
 
         return self::SUCCESS;
     }
