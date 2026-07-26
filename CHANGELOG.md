@@ -4,6 +4,49 @@ All notable changes to `scrapkit/engineering-kit` / `@scrapkit/engineering-kit`
 are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.4.0 - 2026-07-26
+
+### Fixed
+
+- **The prompts no longer degrade in silence where Composer never reached.**
+  `code-review` and `feature-development` cited
+  `vendor/scrapkit/engineering-kit/docs/…` as their checklist, but Claude Code
+  materialises only `plugins/engineering-kit/` when the plugin is installed:
+  in a repository that does not require the package those paths do not exist,
+  so the prompts ran against invented criteria without saying so. Only
+  `quality-audit` noticed, and reported `n/a`. Each skill now carries the
+  guidelines it checks against in its own `references/` directory, so the
+  checklist travels with the prompt on every route.
+
+### Added
+
+- **A `SessionStart` hook in the plugin**, delivering the org-wide rules to the
+  repositories Composer cannot reach — previously they arrived only through the
+  `@vendor/scrapkit/engineering-kit/claude/CLAUDE.md` import. It is deliberately
+  narrow: it runs only when the repository's `origin` remote is under
+  `Scrapkit/`, and stays silent when that vendor file exists, because the
+  Composer import already states the rules there. A fallback, never a second
+  parallel channel.
+- **`composer sync-claude-assets`** (`scripts/sync-claude-assets.php`) —
+  regenerates the copies that have to live inside the plugin subtree.
+  `docs/` and `claude/` stay the canonical, human-facing sources; the script
+  writes the skills' `references/` and `resources/boost/skills/`, prunes
+  orphans, and the test suite fails on a copy that has drifted. Run it after
+  editing a canonical file and commit what it writes.
+
+### Changed
+
+- The four skills cite `references/<document>.md` instead of a `vendor/` path,
+  and `quality-audit` lost its "standards unreachable → `n/a`" branch: the
+  documents ship with the skill, so the degraded path no longer exists. As a
+  side effect the prompt and its standards are pinned by the same git ref, so
+  an audit can no longer be scored against guidelines from a different release.
+- `tests.yml` now also runs on changes under `docs/`, `claude/`, `plugins/` and
+  `resources/`. A docs-only pull request did not run Pest and could ship a
+  stale generated copy.
+- `composer analyse` passes `--memory-limit=512M`, and PHPStan analyses
+  `scripts/` alongside `src/`.
+
 ## v2.3.2 - 2026-07-25
 
 ### Changed
