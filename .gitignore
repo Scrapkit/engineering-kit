@@ -27,6 +27,10 @@ _ide_helper_models.php
 /.vscode
 /.claude
 
+# Agent tool output
+/.playwright-mcp
+/notifications-editor.png
+
 # Misc
 /phpunit.xml
 /phpstan.neon
