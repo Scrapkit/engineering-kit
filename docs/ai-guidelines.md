@@ -42,15 +42,23 @@ Same PR process as any change, plus:
 
 ## Keeping assistants aligned
 
-- Every project imports the org-wide rules via the `CLAUDE.md` line added by
-  `php artisan engineering-kit:install`. Don't remove the import; add
-  project-specific instructions *below* it.
+- Every project that installs the package imports the org-wide rules via the
+  `CLAUDE.md` line added by `php artisan engineering-kit:install`. Don't remove
+  the import; add project-specific instructions *below* it.
+- Repositories Composer does not reach — anything that is not a PHP project,
+  and PHP projects that don't require the kit — get the same rules from the
+  Claude Code plugin, which injects them at session start in `Scrapkit/*`
+  repositories. The plugin skips the injection when the Composer import is
+  already there, so no project ever carries the rules twice.
 - Improvements to the org-wide rules go through a PR to this package, so all
   teams get them on their next `composer update`.
 - Four reusable prompts ship with the kit — `code-review`,
   `feature-development`, `refactoring`, `quality-audit` — as slash commands in
-  Laravel projects and as a Claude Code plugin everywhere else. Installation
-  and the choice between the routes are covered in the
+  Laravel projects and as a Claude Code plugin everywhere else. Each one
+  carries the guidelines it checks against in its own `references/` directory,
+  so a prompt is never scored against standards from a different release, and
+  never silently falls back to invented ones. Installation and the choice
+  between the routes are covered in the
   [README](../README.md#the-prompts-as-a-claude-code-plugin).
 - Projects using [Laravel Boost](https://laravel.com/docs/boost) also receive
   the org rules and the four prompts through Boost's package discovery

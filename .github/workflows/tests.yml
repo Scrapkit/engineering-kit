@@ -9,6 +9,12 @@ on:
       - "composer.json"
       - "phpunit.xml.dist"
       - ".github/workflows/tests.yml"
+      # The suite is what keeps the generated Claude assets honest: a change to
+      # a canonical source, or to a skill, has to run it or a stale copy ships.
+      - "docs/**"
+      - "claude/**"
+      - "plugins/**"
+      - "resources/**"
 
 jobs:
   pest:
