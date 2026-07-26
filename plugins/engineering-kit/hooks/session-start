@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+# SessionStart hook for the scrapkit/engineering-kit plugin.
+#
+# Delivers the org-wide Claude rules to the repositories Composer does not
+# reach. Projects that require the package already import the same rules into
+# their CLAUDE.md via @vendor/scrapkit/engineering-kit/claude/CLAUDE.md, so
+# this hook is a fallback, never a second parallel channel — it stays quiet
+# wherever the Composer route is already in place.
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$PWD}"
+RULES="${PLUGIN_ROOT}/claude/CLAUDE.md"
+
+# Scrapkit repositories only: the plugin is commonly enabled user-wide, and
+# these rules have no business in someone else's project.
+origin="$(git -C "${PROJECT_DIR}" remote get-url origin 2>/dev/null || true)"
+
+if [[ ! "${origin}" =~ ^.*github\.com[:/][Ss]crapkit/ ]]; then
+    exit 0
+fi
+
+# The Composer route already states these rules in the project's CLAUDE.md.
+if [ -f "${PROJECT_DIR}/vendor/scrapkit/engineering-kit/claude/CLAUDE.md" ]; then
+    exit 0
+fi
+
+if [ ! -f "${RULES}" ]; then
+    exit 0
+fi
+
+rules_content="$(cat "${RULES}")"
+
+# Escape for JSON embedding. Each ${s//old/new} is a single C-level pass.
+escape_for_json() {
+    local s="$1"
+    s="${s//\\/\\\\}"
+    s="${s//\"/\\\"}"
+    s="${s//$'\n'/\\n}"
+    s="${s//$'\r'/\\r}"
+    s="${s//$'\t'/\\t}"
+    printf '%s' "$s"
+}
+
+rules_escaped="$(escape_for_json "${rules_content}")"
+
+session_context="The Scrapkit engineering standards apply to this repository. This project does not install scrapkit/engineering-kit through Composer, so the org-wide rules below are delivered by the plugin instead. Project-specific instructions in the repository's own CLAUDE.md take precedence over them.\n\n${rules_escaped}"
+
+# printf rather than a heredoc: bash 5.3 hangs on heredocs in this position.
+if [ -n "${CLAUDE_PLUGIN_ROOT:-}" ]; then
+    printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "SessionStart",\n    "additionalContext": "%s"\n  }\n}\n' "$session_context"
+else
+    printf '{\n  "additionalContext": "%s"\n}\n' "$session_context"
+fi
+
+exit 0

@@ -168,13 +168,11 @@ justifies it.
    and models; do not speculate about the running database)
 5. **Testing** — coverage, missing tests on critical logic
 6. **Technical debt** — TODOs, dead code, outdated dependencies
-7. **Standards compliance** — against `vendor/scrapkit/engineering-kit/docs/`
-   (`coding-guidelines.md`, `architecture-guidelines.md`, `security-guidelines.md`),
-   or against `docs/` when auditing engineering-kit itself. When neither exists
-   the standards are unreachable — the audit reached this repository without the
-   package. Write `n/a` in the Standards Compliance section, say so in the
-   Executive Summary, and stop there: an invented standard would produce
-   findings that no document in the repository supports.
+7. **Standards compliance** — against `references/coding-guidelines.md`,
+   `references/architecture-guidelines.md` and
+   `references/security-guidelines.md`, which ship with this skill and are
+   therefore always readable. Score against those documents only: an invented
+   standard would produce findings that nothing backs.
 
 For every finding give: file and line; Category (Bug / Security / Performance /
 Maintainability / Style / Best Practice / Opinion); Classification; Impact

@@ -14,13 +14,11 @@ Process:
 
 1. **Understand before coding.** Explore the code paths the feature touches;
    identify existing services, components, and utilities to reuse. Respect
-   the architecture criteria in
-   `vendor/scrapkit/engineering-kit/docs/architecture-guidelines.md`
+   the architecture criteria in `references/architecture-guidelines.md`
    (when to create a service, when not to add a pattern).
 2. **Plan.** List the files to change and the tests that will prove the
    feature works. Confirm the plan if anything is ambiguous. When the feature
-   crosses the RFC threshold in
-   `vendor/scrapkit/engineering-kit/docs/rfc-guidelines.md` (new runtime
+   crosses the RFC threshold in `references/rfc-guidelines.md` (new runtime
    dependency, hard-to-reverse architectural change, new package), the RFC is
    written and accepted before the implementation starts.
 3. **Test-first where practical.** Write the failing test (Pest or Vitest),

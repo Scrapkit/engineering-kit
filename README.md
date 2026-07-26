@@ -27,10 +27,19 @@ configs/       php/ (phpstan.neon, pint.json)  javascript/ (eslint, prettier, ts
 templates/     PR template, issue template, RFC template, commit convention
 claude/        org-wide CLAUDE.md, imported into each project's CLAUDE.md
 plugins/       the Claude Code plugin: reusable prompts (code review, feature dev, refactoring, quality audit)
+               plus a SessionStart hook that carries the org rules where Composer cannot
 resources/     boost/ — guidelines and skills auto-discovered by Laravel Boost
 examples/      a fully wired Laravel + React + TypeScript consumer project
 src/           the artisan install/update commands
+scripts/       sync-claude-assets.php — regenerates the copies that live inside the plugin
 ```
+
+Claude Code materialises only `plugins/engineering-kit/` when the plugin is
+installed, so everything a skill or hook reads at runtime has to sit under it.
+`docs/` and `claude/` stay the canonical sources; `composer sync-claude-assets`
+copies what is needed into the skills' `references/` directories and into
+`resources/boost/skills/`, and the test suite fails if a copy drifts. Edit the
+canonical file, run the script, commit both.
 
 ## Installation (Laravel + React + TypeScript project)
 
@@ -100,34 +109,50 @@ install, and enable it in your own `~/.claude/settings.json`:
 
 Refresh with `/plugin marketplace update` after a new release.
 
-The plugin's git ref and the package's Composer version move independently.
-That is fine: `quality-audit` audits a project against
-`vendor/scrapkit/engineering-kit/docs/` at whatever version `composer.lock`
-pins; with no package installed it reports Standards Compliance as `n/a`
-rather than inventing one.
+Each skill carries the guidelines it checks against in its own `references/`
+directory, so the plugin's git ref pins the prompt *and* its standards together:
+an audit is never scored against guidelines from a different release, and a
+repository without the Composer package gets the real checklist rather than a
+degraded run.
 
 Releases before 2.0 also copied the prompts into `.claude/commands/` as
 un-namespaced commands. `engineering-kit:update` removes those copies — with
 `--force` when they were edited locally.
 
+### The org rules where Composer cannot reach
+
+`engineering-kit:install` adds the `@vendor/scrapkit/engineering-kit/claude/CLAUDE.md`
+import, which needs the package installed. For every other repository the
+plugin carries a `SessionStart` hook that injects the same rules directly. It
+is deliberately narrow:
+
+- it runs only when the repository's `origin` remote is under `Scrapkit/` — the
+  plugin is usually enabled user-wide, and these rules have no business in
+  someone else's project;
+- it stays silent when `vendor/scrapkit/engineering-kit/claude/CLAUDE.md`
+  exists, because the Composer import already states them there.
+
+So the hook is a fallback for the repositories Composer misses, never a second
+parallel channel, and no project ever carries the rules twice.
+
 ### Which route to use
 
 The plugin and Laravel Boost deliver the same prompt content: the canonical
 files live under `plugins/engineering-kit/skills/`, and the Boost copies under
-`resources/boost/skills/` are kept byte-identical by a test. The routes are not
+`resources/boost/skills/` are kept byte-identical by a test — `references/`
+included, since Boost copies a skill directory whole. The routes are not
 interchangeable, though:
 
 - **A Laravel project that uses Laravel Boost** can take the prompts from
-  Boost's discovery (see [Using with Laravel Boost](#using-with-laravel-boost)).
-  They arrive with the guidelines they cite, so a single Composer version pins
-  both and they move together on `composer update`.
+  Boost's discovery (see [Using with Laravel Boost](#using-with-laravel-boost)),
+  pinned by `composer.lock` along with the rest of the package.
 - **Every other repository** should use the plugin. It is the only route that
   reaches a repository Composer does not — PHP or otherwise.
 
 Enabling both in one project is supported but discouraged: every prompt shows up
-twice, once as a Boost skill and once as `/engineering-kit:quality-audit`, and —
-as above — the two pins move independently, so an audit can be scored against
-guidelines from a different release.
+twice, once as a Boost skill and once as `/engineering-kit:quality-audit`. The
+duplicate is the whole cost — whichever copy runs carries its own guidelines, so
+neither can be scored against the wrong release.
 
 The JavaScript side is consumed **by extension** — nothing is copied. Wire it
 up with three small files (full versions in [`examples/laravel-react/`](examples/laravel-react/)):
@@ -232,10 +257,15 @@ review process as code ([docs/pull-request-guidelines.md](docs/pull-request-guid
 Run the package's own checks:
 
 ```bash
-composer test      # Pest
-composer analyse   # PHPStan
-composer format    # Pint
+composer test                 # Pest
+composer analyse              # PHPStan
+composer format               # Pint
+composer sync-claude-assets   # regenerate the copies inside plugins/engineering-kit/
 ```
+
+Run the last one after editing anything under `docs/`, `claude/` or
+`plugins/engineering-kit/skills/`, and commit what it writes — the suite fails
+on a stale copy.
 
 ## Documentation
 

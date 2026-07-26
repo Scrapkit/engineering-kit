@@ -21,6 +21,19 @@ final class Manifest
     public const PLUGIN_ID = 'engineering-kit@scrapkit';
 
     /**
+     * The plugin subtree, relative to the package root. Claude Code
+     * materialises only this directory when the plugin is installed, so
+     * anything a skill or a hook reads at runtime has to live under it —
+     * docs/, standards/ and claude/ never reach a plugin-only install.
+     */
+    public const PLUGIN_PATH = 'plugins/engineering-kit';
+
+    /**
+     * The Boost copies of the skills, kept identical to the plugin ones.
+     */
+    public const BOOST_SKILLS_PATH = 'resources/boost/skills';
+
+    /**
      * @return array{extraKnownMarketplaces: array<string, mixed>, enabledPlugins: array<string, bool>}
      */
     public static function pluginSettings(): array
@@ -55,6 +68,46 @@ final class Manifest
             '.github/ISSUE_TEMPLATE/default.md' => self::packagePath('templates/issue-template.md'),
             'docs/rfc/0000-template.md' => self::packagePath('templates/rfc-template.md'),
         ];
+    }
+
+    /**
+     * Guideline documents each skill cites, as [skill => docs/ filenames].
+     * The skills reference them by a path relative to their own directory,
+     * so the checklist travels with the prompt on every route — plugin,
+     * Boost, or Composer — instead of depending on a vendor/ path that only
+     * exists where the package is installed.
+     *
+     * @return array<string, list<string>>
+     */
+    public static function skillReferences(): array
+    {
+        return [
+            'code-review' => ['pull-request-guidelines.md', 'security-guidelines.md'],
+            'feature-development' => ['architecture-guidelines.md', 'rfc-guidelines.md'],
+            'quality-audit' => ['coding-guidelines.md', 'architecture-guidelines.md', 'security-guidelines.md'],
+            'refactoring' => [],
+        ];
+    }
+
+    /**
+     * Files generated inside the plugin subtree from a canonical source
+     * elsewhere in the repository, as [generated => canonical], both relative
+     * to the package root. `composer sync-claude-assets` writes them and a
+     * test asserts they are byte-identical to their source.
+     *
+     * @return array<string, string>
+     */
+    public static function generatedCopies(): array
+    {
+        $copies = [self::PLUGIN_PATH.'/claude/CLAUDE.md' => 'claude/CLAUDE.md'];
+
+        foreach (self::skillReferences() as $skill => $documents) {
+            foreach ($documents as $document) {
+                $copies[self::PLUGIN_PATH."/skills/{$skill}/references/{$document}"] = "docs/{$document}";
+            }
+        }
+
+        return $copies;
     }
 
     /**
