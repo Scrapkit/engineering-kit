@@ -4,6 +4,32 @@ All notable changes to `scrapkit/engineering-kit` / `@scrapkit/engineering-kit`
 are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.4.1 - 2026-07-29
+
+### Fixed
+
+- **Two of the four npm exports could not be loaded by any consumer.**
+  `@scrapkit/engineering-kit/prettier` imported a default export that
+  `prettier-plugin-tailwindcss` does not have — it is ESM-only and exposes only
+  `options`, `parsers`, `printers` — so the module failed to link, and since the
+  failure came from inside the shared config a consumer could not override it.
+  The plugin is now named as a string, the form Prettier resolves itself.
+  `@scrapkit/engineering-kit/vitest` shipped as TypeScript source: Vite
+  externalizes dependencies instead of bundling them, so the file reached Node's
+  ESM loader as-is and Node refuses to strip types under `node_modules`
+  (`ERR_UNSUPPORTED_NODE_MODULES_TYPE_STRIPPING`). It is now shipped as
+  JavaScript. **Both specifiers are unchanged, so consumers need no edit** — the
+  documented `{ ...base }` and `mergeConfig(base, …)` snippets start working.
+
+### Changed
+
+- **`js-configs.yml` imports every npm export instead of syntax-checking two of
+  them.** `node --check` only parses: it never links imports, which is how both
+  bugs above shipped across two releases and stayed invisible to the suite. The
+  job now installs the dependencies and `await import()`s whatever
+  `package.json` promises in `exports`, so a config that cannot load fails here
+  rather than in a consumer project.
+
 ## v2.4.0 - 2026-07-26
 
 ### Fixed
