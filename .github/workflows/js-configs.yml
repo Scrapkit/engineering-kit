@@ -1,4 +1,5 @@
-# Validates the shipped JavaScript configs: syntax check and npm payload.
+# Validates the shipped JavaScript configs: every npm export is actually loaded,
+# then the npm payload is verified.
 name: JS Configs
 
 on:
@@ -7,7 +8,7 @@ on:
   pull_request:
     paths:
       - "configs/javascript/**"
-      - "configs/testing/vitest.config.ts"
+      - "configs/testing/vitest.config.js"
       - "package.json"
       - ".github/workflows/js-configs.yml"
 
@@ -19,10 +20,31 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Syntax-check shipped configs
+      # `vitest` is an optional peer dependency, so it needs asking for by name;
+      # everything else arrives as a dependency or a required peer.
+      - name: Install dependencies
+        run: npm install --no-save --no-audit --no-fund vitest
+      - name: Load every shipped npm export
+        # Not `node --check`: that only parses, it never links the imports. A
+        # config importing a default export its plugin does not have, or shipped
+        # as TypeScript under node_modules, passes a syntax check and then fails
+        # in every consumer. This step imports what package.json promises.
         run: |
-          node --check configs/javascript/eslint.config.js
-          node --check configs/javascript/prettier.config.js
-          node -e "JSON.parse(require('fs').readFileSync('configs/javascript/tsconfig.base.json'))"
+          node --input-type=module -e '
+            import { readFileSync } from "node:fs";
+            import { pathToFileURL } from "node:url";
+
+            const { exports: map } = JSON.parse(readFileSync("package.json", "utf8"));
+
+            for (const [name, path] of Object.entries(map)) {
+              if (path.endsWith(".json")) {
+                JSON.parse(readFileSync(path, "utf8"));
+              } else {
+                await import(pathToFileURL(path).href);
+              }
+
+              console.log(`ok  ${name} -> ${path}`);
+            }
+          '
       - name: Verify npm payload
         run: npm pack --dry-run

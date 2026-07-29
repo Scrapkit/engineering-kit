@@ -1,5 +1,3 @@
-import tailwindcss from 'prettier-plugin-tailwindcss';
-
 /**
  * Scrapkit shared Prettier base config.
  *
@@ -12,6 +10,12 @@ import tailwindcss from 'prettier-plugin-tailwindcss';
  *         tailwindStylesheet: 'resources/css/app.css', // project-specific
  *     };
  *
+ * The Tailwind plugin is named as a string rather than imported: it is ESM-only
+ * and exposes no default export (only `options`, `parsers`, `printers`), so
+ * `import tailwindcss from 'prettier-plugin-tailwindcss'` fails to link in every
+ * consumer that has the plugin installed — and the failure comes from this file,
+ * where a consumer cannot override it. Prettier resolves plugin strings itself.
+ *
  * @type {import('prettier').Config}
  */
 export default {
@@ -21,7 +25,7 @@ export default {
     htmlWhitespaceSensitivity: 'css',
     printWidth: 80,
     tabWidth: 4,
-    plugins: [tailwindcss],
+    plugins: ['prettier-plugin-tailwindcss'],
     tailwindFunctions: ['clsx', 'cn', 'cva'],
     overrides: [
         {

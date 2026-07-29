@@ -1,6 +1,6 @@
 {
     "name": "@scrapkit/engineering-kit",
-    "version": "2.4.0",
+    "version": "2.4.1",
     "description": "Scrapkit Engineering Standards Kit: shared ESLint, Prettier, TypeScript and Vitest base configs",
     "type": "module",
     "license": "MIT",
@@ -18,13 +18,13 @@
     ],
     "files": [
         "configs/javascript",
-        "configs/testing/vitest.config.ts"
+        "configs/testing/vitest.config.js"
     ],
     "exports": {
         "./eslint": "./configs/javascript/eslint.config.js",
         "./prettier": "./configs/javascript/prettier.config.js",
         "./tsconfig.base.json": "./configs/javascript/tsconfig.base.json",
-        "./vitest": "./configs/testing/vitest.config.ts"
+        "./vitest": "./configs/testing/vitest.config.js"
     },
     "engines": {
         "node": ">=20"
